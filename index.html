@@ -28,7 +28,45 @@
             width: 100%;
             height: 100%;
             background: radial-gradient(circle at center, #1e1b4b 0%, #070b19 70%);
+            z-index: -2;
+        }
+
+        /* KHUNG 7 TIA SÁNG CHIẾU TỪ GÓC TRÊN BÊN TRÁI */
+        .light-beams-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             z-index: -1;
+            pointer-events: none;
+        }
+
+        .beam {
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 3px;
+            height: 150vh;
+            transform: rotate(35deg);
+            transform-origin: top left;
+            opacity: 0.35; /* Độ mờ nhẹ nhàng */
+            filter: blur(2px);
+        }
+
+        /* 7 màu quang phổ: Đỏ, Cam, Vàng, Lục, Lam, Chàm, Tím */
+        .beam:nth-child(1) { background: #ef4444; left: 2%;  animation: pulseBeam 4s infinite alternate; }
+        .beam:nth-child(2) { background: #f97316; left: 5%;  animation: pulseBeam 4.5s infinite alternate 0.5s; }
+        .beam:nth-child(3) { background: #eab308; left: 8%;  animation: pulseBeam 5s infinite alternate 1s; }
+        .beam:nth-child(4) { background: #22c55e; left: 11%; animation: pulseBeam 4.2s infinite alternate 1.5s; }
+        .beam:nth-child(5) { background: #3b82f6; left: 14%; animation: pulseBeam 4.8s infinite alternate 2s; }
+        .beam:nth-child(6) { background: #6366f1; left: 17%; animation: pulseBeam 5.2s infinite alternate 2.5s; }
+        .beam:nth-child(7) { background: #a855f7; left: 20%; animation: pulseBeam 4.6s infinite alternate 3s; }
+
+        @keyframes pulseBeam {
+            0% { opacity: 0.2; transform: rotate(35deg) scaleX(0.8); }
+            100% { opacity: 0.5; transform: rotate(35deg) scaleX(1.2); }
         }
 
         .game-container {
@@ -48,45 +86,6 @@
         /* SẢNH CHỜ (LOBBY) */
         #lobby-screen {
             display: block;
-        }
-
-        /* 6 Vệt ánh sáng xoay vòng (Đỏ, Cam, Vàng, Lục, Lam, Tím) */
-        .prism-ring-container {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 25px auto;
-        }
-
-        .prism-ring {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 4px dashed transparent;
-            position: absolute;
-            top: 0;
-            left: 0;
-            animation: spin 6s linear infinite;
-        }
-
-        .ray {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            box-shadow: 0 0 15px currentColor;
-        }
-        /* Vị trí 6 màu rải đều vòng tròn */
-        .ray:nth-child(1) { background: #ef4444; color: #ef4444; top: 0; left: 52px; } /* Đỏ */
-        .ray:nth-child(2) { background: #f97316; color: #f97316; top: 18px; left: 95px; } /* Cam */
-        .ray:nth-child(3) { background: #eab308; color: #eab308; top: 58px; left: 105px; } /* Vàng */
-        .ray:nth-child(4) { background: #22c55e; color: #22c55e; top: 95px; left: 75px; } /* Lục */
-        .ray:nth-child(5) { background: #3b82f6; color: #3b82f6; top: 95px; left: 25px; } /* Lam */
-        .ray:nth-child(6) { background: #a855f7; color: #a855f7; top: 45px; left: 5px; } /* Tím */
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         h1 {
@@ -209,20 +208,21 @@
 
     <div class="bg-glow"></div>
 
+    <!-- 7 VỆT ÁNH SÁNG DÀI CHIẾU TỪ GÓC TRÊN BÊN TRÁI -->
+    <div class="light-beams-container">
+        <div class="beam"></div>
+        <div class="beam"></div>
+        <div class="beam"></div>
+        <div class="beam"></div>
+        <div class="beam"></div>
+        <div class="beam"></div>
+        <div class="beam"></div>
+    </div>
+
     <div class="game-container">
         
         <!-- SẢNH CHỜ (LOBBY) -->
         <div id="lobby-screen">
-            <div class="prism-ring-container">
-                <div class="prism-ring">
-                    <div class="ray"></div>
-                    <div class="ray"></div>
-                    <div class="ray"></div>
-                    <div class="ray"></div>
-                    <div class="ray"></div>
-                    <div class="ray"></div>
-                </div>
-            </div>
             <h1>Quang Trình Lăng Kính</h1>
             <p class="subtitle">Thử thách kiến thức Vật lí 11 về Khúc xạ & Tán sắc ánh sáng</p>
             <button class="start-btn" onclick="startGame()">Bắt đầu hành trình</button>
