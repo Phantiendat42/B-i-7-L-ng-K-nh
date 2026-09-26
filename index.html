@@ -54,7 +54,6 @@
             filter: blur(2px);
         }
 
-        /* 7 màu quang phổ với tốc độ chớp nháy và nhịp độ khác nhau */
         .beam:nth-child(1) { background: #ef4444; left: 1%;  animation: flashBeam 1.8s infinite alternate; }
         .beam:nth-child(2) { background: #f97316; left: 4%;  animation: flashBeam 1.2s infinite alternate 0.3s; }
         .beam:nth-child(3) { background: #eab308; left: 7%;  animation: flashBeam 2.1s infinite alternate 0.6s; }
@@ -94,8 +93,8 @@
             background-color: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(12px);
             padding: 40px 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 25px rgba(59, 130, 246, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7), 0 0 30px rgba(59, 130, 246, 0.25);
             width: 100%;
             max-width: 650px;
             text-align: center;
@@ -104,25 +103,92 @@
             z-index: 1;
         }
 
-        /* TRANG TRÍ HÌNH LĂNG KÍNH 3D NHỎ Ở SẢNH CHỜ */
-        .prism-decoration {
-            width: 60px;
-            height: 50px;
-            margin: 0 auto 15px auto;
-            position: relative;
-            animation: rotatePrism 5s infinite ease-in-out;
+        /* KHU VỰC TRANG TRÍ MÔ PHỎNG LĂNG KÍNH TÁN SẮC Ở SẢNH CHỜ */
+        .prism-showcase {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            height: 80px;
         }
-        .prism-shape {
+
+        /* Tia sáng trắng chiếu vào lăng kính */
+        .incoming-ray {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ffffff);
+            animation: moveRay 1.5s infinite linear;
+        }
+        @keyframes moveRay {
+            0% { opacity: 0.2; transform: translateX(-10px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Hình khối lăng kính tam giác 3D trung tâm */
+        .prism-icon {
             width: 0;
             height: 0;
-            border-left: 30px solid transparent;
-            border-right: 30px solid transparent;
-            border-bottom: 50px solid rgba(56, 189, 248, 0.8);
-            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8));
+            border-left: 35px solid transparent;
+            border-right: 35px solid transparent;
+            border-bottom: 60px solid rgba(56, 189, 248, 0.9);
+            position: relative;
+            filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.8));
+            animation: floatPrism 3s infinite ease-in-out;
         }
-        @keyframes rotatePrism {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-6px) scale(1.05); filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.9)); }
+        @keyframes floatPrism {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.9)); }
+        }
+
+        /* Các tia quang phổ ló ra */
+        .spectrum-rays {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            width: 50px;
+        }
+        .s-ray {
+            height: 2px;
+            width: 100%;
+            border-radius: 2px;
+            animation: pulseRay 1s infinite alternate;
+        }
+        .s-ray:nth-child(1) { background: #ef4444; animation-delay: 0.1s; }
+        .s-ray:nth-child(2) { background: #f97316; animation-delay: 0.2s; }
+        .s-ray:nth-child(3) { background: #eab308; animation-delay: 0.3s; }
+        .s-ray:nth-child(4) { background: #22c55e; animation-delay: 0.4s; }
+        .s-ray:nth-child(5) { background: #3b82f6; animation-delay: 0.5s; }
+        .s-ray:nth-child(6) { background: #a855f7; animation-delay: 0.6s; }
+        
+        @keyframes pulseRay {
+            0% { opacity: 0.4; transform: scaleX(0.8); }
+            100% { opacity: 1; transform: scaleX(1.2); }
+        }
+
+        /* CÁC HUY HIỆU THÔNG TIN TRANG TRÍ */
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .info-badge {
+            background: rgba(51, 65, 85, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-badge span {
+            color: #38bdf8;
+            font-weight: 600;
         }
 
         /* SẢNH CHỜ (LOBBY) */
@@ -142,7 +208,7 @@
             background: linear-gradient(135deg, #3b82f6, #8b5cf6);
             color: white;
             border: none;
-            padding: 14px 35px;
+            padding: 14px 40px;
             border-radius: 30px;
             font-size: 18px;
             font-weight: bold;
@@ -153,7 +219,7 @@
 
         .start-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.7);
+            box-shadow: 0 8px 22px rgba(139, 92, 246, 0.7);
         }
 
         /* MÀN HÌNH CHƠI GAME (QUIZ) */
@@ -288,10 +354,28 @@
         
         <!-- SẢNH CHỜ (LOBBY) -->
         <div id="lobby-screen">
-            <div class="prism-decoration">
-                <div class="prism-shape"></div>
+            <!-- Mô hình lăng kính tán sắc trang trí -->
+            <div class="prism-showcase">
+                <div class="incoming-ray"></div>
+                <div class="prism-icon"></div>
+                <div class="spectrum-rays">
+                    <div class="s-ray"></div>
+                    <div class="s-ray"></div>
+                    <div class="s-ray"></div>
+                    <div class="s-ray"></div>
+                    <div class="s-ray"></div>
+                    <div class="s-ray"></div>
+                </div>
             </div>
+
             <h1>Bài 7 Lăng Kính</h1>
+
+            <!-- Các thẻ huy hiệu trang trí -->
+            <div class="badge-container">
+                <div class="info-badge">📖 Chủ đề: <span>Quang hình học</span></div>
+                <div class="info-badge">❓ Số câu: <span>10 câu hỏi</span></div>
+            </div>
+
             <button class="start-btn" onclick="startGame()">Bắt đầu chơi</button>
         </div>
 
