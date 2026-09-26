@@ -5,69 +5,179 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quang Trình Lăng Kính - Game Vật Lí 11</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            background-color: #0f172a;
+            background-color: #070b19;
             color: #f8fafc;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            overflow: hidden;
+            position: relative;
         }
+
+        /* Hiệu ứng nền không gian tối */
+        .bg-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1e1b4b 0%, #070b19 70%);
+            z-index: -1;
+        }
+
         .game-container {
-            background-color: #1e293b;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            background-color: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
             width: 100%;
             max-width: 650px;
             text-align: center;
-            border: 2px solid #3b82f6;
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            position: relative;
+            z-index: 1;
         }
+
+        /* SẢNH CHỜ (LOBBY) */
+        #lobby-screen {
+            display: block;
+        }
+
+        /* 6 Vệt ánh sáng xoay vòng (Đỏ, Cam, Vàng, Lục, Lam, Tím) */
+        .prism-ring-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 25px auto;
+        }
+
+        .prism-ring {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px dashed transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: spin 6s linear infinite;
+        }
+
+        .ray {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px currentColor;
+        }
+        /* Vị trí 6 màu rải đều vòng tròn */
+        .ray:nth-child(1) { background: #ef4444; color: #ef4444; top: 0; left: 52px; } /* Đỏ */
+        .ray:nth-child(2) { background: #f97316; color: #f97316; top: 18px; left: 95px; } /* Cam */
+        .ray:nth-child(3) { background: #eab308; color: #eab308; top: 58px; left: 105px; } /* Vàng */
+        .ray:nth-child(4) { background: #22c55e; color: #22c55e; top: 95px; left: 75px; } /* Lục */
+        .ray:nth-child(5) { background: #3b82f6; color: #3b82f6; top: 95px; left: 25px; } /* Lam */
+        .ray:nth-child(6) { background: #a855f7; color: #a855f7; top: 45px; left: 5px; } /* Tím */
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         h1 {
             color: #38bdf8;
             margin-bottom: 10px;
-            font-size: 24px;
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
         }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.6);
+        }
+
+        /* MÀN HÌNH CHƠI GAME (QUIZ) */
+        #quiz-screen {
+            display: none;
+        }
+
         #progress {
             font-size: 14px;
             color: #94a3b8;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
+
         #question-text {
             font-size: 18px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             font-weight: 600;
-            line-height: 1.4;
+            line-height: 1.5;
+            color: #f1f5f9;
         }
+
         .options-container {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
+
         .option-btn {
             background-color: #334155;
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 14px 20px;
+            border-radius: 10px;
             font-size: 16px;
             cursor: pointer;
             transition: 0.2s;
             text-align: left;
+            border: 1px solid rgba(255,255,255,0.05);
         }
+
         .option-btn:hover:not(:disabled) {
-            background-color: #3b82f6;
+            background-color: #475569;
+            border-color: #3b82f6;
+            transform: translateX(4px);
         }
+
         .option-btn.correct {
             background-color: #22c55e !important;
+            border-color: #4ade80 !important;
         }
+
         .option-btn.wrong {
             background-color: #ef4444 !important;
+            border-color: #f87171 !important;
         }
+
         #next-btn {
-            margin-top: 20px;
+            margin-top: 25px;
             background-color: #8b5cf6;
             color: white;
             border: none;
@@ -76,20 +186,49 @@
             font-size: 16px;
             cursor: pointer;
             display: none;
+            transition: 0.2s;
         }
+
         #next-btn:hover {
             background-color: #7c3aed;
         }
+
+        /* MÀN HÌNH KẾT QUẢ */
         #result-screen {
             display: none;
+        }
+
+        #result-screen h2 {
+            color: #38bdf8;
+            margin-bottom: 15px;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
 
+    <div class="bg-glow"></div>
+
     <div class="game-container">
-        <h1>Quang Trình Lăng Kính</h1>
         
+        <!-- SẢNH CHỜ (LOBBY) -->
+        <div id="lobby-screen">
+            <div class="prism-ring-container">
+                <div class="prism-ring">
+                    <div class="ray"></div>
+                    <div class="ray"></div>
+                    <div class="ray"></div>
+                    <div class="ray"></div>
+                    <div class="ray"></div>
+                    <div class="ray"></div>
+                </div>
+            </div>
+            <h1>Quang Trình Lăng Kính</h1>
+            <p class="subtitle">Thử thách kiến thức Vật lí 11 về Khúc xạ & Tán sắc ánh sáng</p>
+            <button class="start-btn" onclick="startGame()">Bắt đầu hành trình</button>
+        </div>
+
+        <!-- MÀN HÌNH CÂU HỎI -->
         <div id="quiz-screen">
             <div id="progress">Câu hỏi 1 / 10</div>
             <div id="question-text">Đang tải câu hỏi...</div>
@@ -97,64 +236,66 @@
             <button id="next-btn" onclick="nextQuestion()">Câu tiếp theo ➔</button>
         </div>
 
+        <!-- MÀN HÌNH KẾT QUẢ -->
         <div id="result-screen">
             <h2>🎉 Hoàn thành thử thách!</h2>
-            <p id="score-text" style="font-size: 18px; margin: 20px 0;"></p>
-            <button class="option-btn" style="text-align: center; justify-content: center;" onclick="restartGame()">Chơi lại từ đầu</button>
+            <p id="score-text" style="font-size: 18px; margin: 20px 0; color: #cbd5e1;"></p>
+            <button class="start-btn" onclick="restartGame()">Chơi lại từ đầu</button>
         </div>
+
     </div>
 
     <script>
         const questions = [
             {
-                question: "Tiết diện thẳng của lăng kính có hình dạng là:",
+                question: "Câu 1. Tiết diện thẳng của lăng kính có hình dạng là:",
                 options: ["Hình tròn", "Hình vuông", "Hình tam giác", "Hình chữ nhật"],
-                answer: 2 // Đáp án C
+                answer: 2
             },
             {
-                question: "Qua lăng kính, tia ló luôn bị lệch về phía:",
+                question: "Câu 2. Qua lăng kính, tia ló luôn bị lệch về phía:",
                 options: ["Cạnh lăng kính", "Đáy lăng kính", "Trục lăng kính", "Mặt bên lăng kính"],
-                answer: 1 // Đáp án B
+                answer: 1
             },
             {
-                question: "Ánh sáng đơn sắc là ánh sáng:",
+                question: "Câu 3. Ánh sáng đơn sắc là ánh sáng:",
                 options: ["Bị tán sắc khi qua lăng kính", "Có một màu nhất định và không bị tán sắc", "Không bị lệch hướng khi qua lăng kính", "Chỉ truyền được trong không khí"],
-                answer: 1 // Đáp án B
+                answer: 1
             },
             {
-                question: "Hiện tượng lăng kính tách chùm sáng trắng thành nhiều chùm sáng màu gọi là:",
+                question: "Câu 4. Hiện tượng lăng kính tách chùm sáng trắng thành nhiều chùm sáng màu gọi là:",
                 options: ["Phản xạ", "Khúc xạ", "Tán sắc", "Gom sáng"],
-                answer: 2 // Đáp án C
+                answer: 2
             },
             {
-                question: "Dải màu quang phổ sau khi qua lăng kính biến thiên liên tục từ:",
+                question: "Câu 5. Dải màu quang phổ sau khi qua lăng kính biến thiên liên tục từ:",
                 options: ["Đỏ đến Tím", "Lam đến Tím", "Vàng đến Lục", "Đỏ đến Lục"],
-                answer: 0 // Đáp án A
+                answer: 0
             },
             {
-                question: "Ánh sáng trắng (như ánh sáng Mặt Trời) là:",
+                question: "Câu 6. Ánh sáng trắng (như ánh sáng Mặt Trời) là:",
                 options: ["Ánh sáng đơn sắc", "Hỗn hợp nhiều ánh sáng đơn sắc từ đỏ đến tím", "Ánh sáng không bị khúc xạ", "Ánh sáng chỉ có màu trắng"],
-                answer: 1 // Đáp án B
+                answer: 1
             },
             {
-                question: "Vật có màu đỏ vì nó:",
+                question: "Câu 7. Vật có màu đỏ vì nó:",
                 options: ["Hấp thụ ánh sáng màu đỏ", "Phản xạ ánh sáng màu đỏ đến mắt", "Tự phát ra ánh sáng màu đỏ", "Làm biến đổi ánh sáng trắng"],
-                answer: 1 // Đáp án B
+                answer: 1
             },
             {
-                question: "Ta nhìn thấy vật màu đen vì vật đó:",
+                question: "Câu 8. Ta nhìn thấy vật màu đen vì vật đó:",
                 options: ["Phản xạ tất cả các màu", "Không phản xạ ánh sáng (hấp thụ hầu hết ánh sáng)", "Chỉ phản xạ ánh sáng tím", "Tự phát ra màu đen"],
-                answer: 1 // Đáp án B
+                answer: 1
             },
             {
-                question: "Thiết bị ứng dụng lăng kính để phân tích thành phần ánh sáng là:",
+                question: "Câu 9. Thiết bị ứng dụng lăng kính để phân tích thành phần ánh sáng là:",
                 options: ["Kính lúp", "Máy quang phổ", "Kính hiển vi", "Gương cầu"],
-                answer: 1 // Đáp án B
+                answer: 1
             },
             {
-                question: "Khi chùm sáng trắng qua lăng kính, tia lệch ít nhất là màu ... và lệch nhiều nhất là màu ...",
+                question: "Câu 10. Khi chùm sáng trắng qua lăng kính, tia lệch ít nhất là màu ... và lệch nhiều nhất là màu ...",
                 options: ["Tím / Đỏ", "Đỏ / Lục", "Đỏ / Tím", "Vàng / Tím"],
-                answer: 2 // Đáp án C
+                answer: 2
             }
         ];
 
@@ -162,13 +303,20 @@
         let score = 0;
         let answered = false;
 
+        const lobbyScreen = document.getElementById("lobby-screen");
+        const quizScreen = document.getElementById("quiz-screen");
+        const resultScreen = document.getElementById("result-screen");
         const questionText = document.getElementById("question-text");
         const optionsContainer = document.getElementById("options-container");
         const progressText = document.getElementById("progress");
         const nextBtn = document.getElementById("next-btn");
-        const quizScreen = document.getElementById("quiz-screen");
-        const resultScreen = document.getElementById("result-screen");
         const scoreText = document.getElementById("score-text");
+
+        function startGame() {
+            lobbyScreen.style.display = "none";
+            quizScreen.style.display = "block";
+            loadQuestion();
+        }
 
         function loadQuestion() {
             answered = false;
@@ -225,12 +373,9 @@
         function restartGame() {
             currentQuestionIndex = 0;
             score = 0;
-            quizScreen.style.display = "block";
             resultScreen.style.display = "none";
-            loadQuestion();
+            lobbyScreen.style.display = "block";
         }
-
-        loadQuestion();
     </script>
 </body>
 </html>
