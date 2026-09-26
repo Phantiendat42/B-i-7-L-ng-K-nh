@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quang Trình Lăng Kính - Game Vật Lí 11</title>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .game-container {
+            background-color: #1e293b;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
+            border: 2px solid #3b82f6;
+        }
+        h1 {
+            color: #38bdf8;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        #progress {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+        #question-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option-btn {
+            background-color: #334155;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: left;
+        }
+        .option-btn:hover:not(:disabled) {
+            background-color: #3b82f6;
+        }
+        .option-btn.correct {
+            background-color: #22c55e !important;
+        }
+        .option-btn.wrong {
+            background-color: #ef4444 !important;
+        }
+        #next-btn {
+            margin-top: 20px;
+            background-color: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            display: none;
+        }
+        #next-btn:hover {
+            background-color: #7c3aed;
+        }
+        #result-screen {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>Quang Trình Lăng Kính</h1>
+        
+        <div id="quiz-screen">
+            <div id="progress">Câu hỏi 1 / 10</div>
+            <div id="question-text">Đang tải câu hỏi...</div>
+            <div class="options-container" id="options-container"></div>
+            <button id="next-btn" onclick="nextQuestion()">Câu tiếp theo ➔</button>
+        </div>
+
+        <div id="result-screen">
+            <h2>🎉 Hoàn thành thử thách!</h2>
+            <p id="score-text" style="font-size: 18px; margin: 20px 0;"></p>
+            <button class="option-btn" style="text-align: center; justify-content: center;" onclick="restartGame()">Chơi lại từ đầu</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Tiết diện thẳng của lăng kính có hình dạng là:",
+                options: ["Hình tròn", "Hình vuông", "Hình tam giác", "Hình chữ nhật"],
+                answer: 2 // Đáp án C
+            },
+            {
+                question: "Qua lăng kính, tia ló luôn bị lệch về phía:",
+                options: ["Cạnh lăng kính", "Đáy lăng kính", "Trục lăng kính", "Mặt bên lăng kính"],
+                answer: 1 // Đáp án B
+            },
+            {
+                question: "Ánh sáng đơn sắc là ánh sáng:",
+                options: ["Bị tán sắc khi qua lăng kính", "Có một màu nhất định và không bị tán sắc", "Không bị lệch hướng khi qua lăng kính", "Chỉ truyền được trong không khí"],
+                answer: 1 // Đáp án B
+            },
+            {
+                question: "Hiện tượng lăng kính tách chùm sáng trắng thành nhiều chùm sáng màu gọi là:",
+                options: ["Phản xạ", "Khúc xạ", "Tán sắc", "Gom sáng"],
+                answer: 2 // Đáp án C
+            },
+            {
+                question: "Dải màu quang phổ sau khi qua lăng kính biến thiên liên tục từ:",
+                options: ["Đỏ đến Tím", "Lam đến Tím", "Vàng đến Lục", "Đỏ đến Lục"],
+                answer: 0 // Đáp án A
+            },
+            {
+                question: "Ánh sáng trắng (như ánh sáng Mặt Trời) là:",
+                options: ["Ánh sáng đơn sắc", "Hỗn hợp nhiều ánh sáng đơn sắc từ đỏ đến tím", "Ánh sáng không bị khúc xạ", "Ánh sáng chỉ có màu trắng"],
+                answer: 1 // Đáp án B
+            },
+            {
+                question: "Vật có màu đỏ vì nó:",
+                options: ["Hấp thụ ánh sáng màu đỏ", "Phản xạ ánh sáng màu đỏ đến mắt", "Tự phát ra ánh sáng màu đỏ", "Làm biến đổi ánh sáng trắng"],
+                answer: 1 // Đáp án B
+            },
+            {
+                question: "Ta nhìn thấy vật màu đen vì vật đó:",
+                options: ["Phản xạ tất cả các màu", "Không phản xạ ánh sáng (hấp thụ hầu hết ánh sáng)", "Chỉ phản xạ ánh sáng tím", "Tự phát ra màu đen"],
+                answer: 1 // Đáp án B
+            },
+            {
+                question: "Thiết bị ứng dụng lăng kính để phân tích thành phần ánh sáng là:",
+                options: ["Kính lúp", "Máy quang phổ", "Kính hiển vi", "Gương cầu"],
+                answer: 1 // Đáp án B
+            },
+            {
+                question: "Khi chùm sáng trắng qua lăng kính, tia lệch ít nhất là màu ... và lệch nhiều nhất là màu ...",
+                options: ["Tím / Đỏ", "Đỏ / Lục", "Đỏ / Tím", "Vàng / Tím"],
+                answer: 2 // Đáp án C
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("options-container");
+        const progressText = document.getElementById("progress");
+        const nextBtn = document.getElementById("next-btn");
+        const quizScreen = document.getElementById("quiz-screen");
+        const resultScreen = document.getElementById("result-screen");
+        const scoreText = document.getElementById("score-text");
+
+        function loadQuestion() {
+            answered = false;
+            nextBtn.style.display = "none";
+            const currentQ = questions[currentQuestionIndex];
+            progressText.innerText = `Câu hỏi ${currentQuestionIndex + 1} / ${questions.length}`;
+            questionText.innerText = currentQ.question;
+            optionsContainer.innerHTML = "";
+
+            currentQ.options.forEach((option, index) => {
+                const btn = document.createElement("button");
+                btn.classList.add("option-btn");
+                btn.innerText = `${String.fromCharCode(65 + index)}. ${option}`;
+                btn.onclick = () => selectOption(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIndex, selectedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const currentQ = questions[currentQuestionIndex];
+            const allBtns = optionsContainer.children;
+
+            if (selectedIndex === currentQ.answer) {
+                selectedBtn.classList.add("correct");
+                score++;
+            } else {
+                selectedBtn.classList.add("wrong");
+                allBtns[currentQ.answer].classList.add("correct");
+            }
+
+            for (let btn of allBtns) {
+                btn.disabled = true;
+            }
+
+            if (currentQuestionIndex < questions.length - 1) {
+                nextBtn.style.display = "inline-block";
+            } else {
+                setTimeout(() => {
+                    quizScreen.style.display = "none";
+                    resultScreen.style.display = "block";
+                    scoreText.innerText = `Bạn đã trả lời đúng ${score} / ${questions.length} câu hỏi!`;
+                }, 1000);
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function restartGame() {
+            currentQuestionIndex = 0;
+            score = 0;
+            quizScreen.style.display = "block";
+            resultScreen.style.display = "none";
+            loadQuestion();
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
