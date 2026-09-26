@@ -28,10 +28,10 @@
             width: 100%;
             height: 100%;
             background: radial-gradient(circle at center, #1e1b4b 0%, #070b19 70%);
-            z-index: -2;
+            z-index: -3;
         }
 
-        /* KHUNG 7 TIA SÁNG CHIẾU TỪ GÓC TRÊN BÊN TRÁI */
+        /* KHUNG 7 TIA SÁNG CHỚP NHÁY LIÊN TỤC TỪ GÓC TRÊN BÊN TRÁI */
         .light-beams-container {
             position: absolute;
             top: 0;
@@ -39,7 +39,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            z-index: -1;
+            z-index: -2;
             pointer-events: none;
         }
 
@@ -47,40 +47,82 @@
             position: absolute;
             top: -50px;
             left: -50px;
-            width: 3px;
-            height: 150vh;
+            width: 4px;
+            height: 160vh;
             transform: rotate(35deg);
             transform-origin: top left;
-            opacity: 0.35; /* Độ mờ nhẹ nhàng */
             filter: blur(2px);
         }
 
-        /* 7 màu quang phổ: Đỏ, Cam, Vàng, Lục, Lam, Chàm, Tím */
-        .beam:nth-child(1) { background: #ef4444; left: 2%;  animation: pulseBeam 4s infinite alternate; }
-        .beam:nth-child(2) { background: #f97316; left: 5%;  animation: pulseBeam 4.5s infinite alternate 0.5s; }
-        .beam:nth-child(3) { background: #eab308; left: 8%;  animation: pulseBeam 5s infinite alternate 1s; }
-        .beam:nth-child(4) { background: #22c55e; left: 11%; animation: pulseBeam 4.2s infinite alternate 1.5s; }
-        .beam:nth-child(5) { background: #3b82f6; left: 14%; animation: pulseBeam 4.8s infinite alternate 2s; }
-        .beam:nth-child(6) { background: #6366f1; left: 17%; animation: pulseBeam 5.2s infinite alternate 2.5s; }
-        .beam:nth-child(7) { background: #a855f7; left: 20%; animation: pulseBeam 4.6s infinite alternate 3s; }
+        /* 7 màu quang phổ với tốc độ chớp nháy và nhịp độ khác nhau */
+        .beam:nth-child(1) { background: #ef4444; left: 1%;  animation: flashBeam 1.8s infinite alternate; }
+        .beam:nth-child(2) { background: #f97316; left: 4%;  animation: flashBeam 1.2s infinite alternate 0.3s; }
+        .beam:nth-child(3) { background: #eab308; left: 7%;  animation: flashBeam 2.1s infinite alternate 0.6s; }
+        .beam:nth-child(4) { background: #22c55e; left: 10%; animation: flashBeam 1.5s infinite alternate 0.2s; }
+        .beam:nth-child(5) { background: #3b82f6; left: 13%; animation: flashBeam 2.4s infinite alternate 0.9s; }
+        .beam:nth-child(6) { background: #6366f1; left: 16%; animation: flashBeam 1.6s infinite alternate 0.4s; }
+        .beam:nth-child(7) { background: #a855f7; left: 19%; animation: flashBeam 2.0s infinite alternate 0.7s; }
 
-        @keyframes pulseBeam {
-            0% { opacity: 0.2; transform: rotate(35deg) scaleX(0.8); }
-            100% { opacity: 0.5; transform: rotate(35deg) scaleX(1.2); }
+        @keyframes flashBeam {
+            0% { opacity: 0.15; transform: rotate(35deg) scaleX(0.7); }
+            50% { opacity: 0.6; transform: rotate(35deg) scaleX(1.4); filter: blur(3px); }
+            100% { opacity: 0.25; transform: rotate(35deg) scaleX(0.9); }
+        }
+
+        /* CÁC HẠT SÁNG NỀN TRANG TRÍ */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: floatParticle 6s infinite linear;
+            opacity: 0.3;
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(105vh) scale(0); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-5vh) scale(1); opacity: 0; }
         }
 
         .game-container {
             background-color: rgba(30, 41, 59, 0.85);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             padding: 40px 30px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 25px rgba(59, 130, 246, 0.2);
             width: 100%;
             max-width: 650px;
             text-align: center;
-            border: 2px solid rgba(59, 130, 246, 0.5);
+            border: 2px solid rgba(59, 130, 246, 0.4);
             position: relative;
             z-index: 1;
+        }
+
+        /* TRANG TRÍ HÌNH LĂNG KÍNH 3D NHỎ Ở SẢNH CHỜ */
+        .prism-decoration {
+            width: 60px;
+            height: 50px;
+            margin: 0 auto 15px auto;
+            position: relative;
+            animation: rotatePrism 5s infinite ease-in-out;
+        }
+        .prism-shape {
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 50px solid rgba(56, 189, 248, 0.8);
+            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8));
+        }
+        @keyframes rotatePrism {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.05); filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.9)); }
         }
 
         /* SẢNH CHỜ (LOBBY) */
@@ -90,9 +132,10 @@
 
         h1 {
             color: #38bdf8;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-size: 32px;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+            text-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+            letter-spacing: 0.5px;
         }
 
         .start-btn {
@@ -110,18 +153,43 @@
 
         .start-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.6);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.7);
         }
 
         /* MÀN HÌNH CHƠI GAME (QUIZ) */
         #quiz-screen {
             display: none;
+            position: relative;
+        }
+
+        /* NÚT QUAY LẠI SẢNH */
+        .home-btn {
+            position: absolute;
+            top: -15px;
+            left: -5px;
+            background: rgba(51, 65, 85, 0.8);
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .home-btn:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
         }
 
         #progress {
             font-size: 14px;
             color: #94a3b8;
             margin-bottom: 15px;
+            margin-top: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -202,7 +270,7 @@
 
     <div class="bg-glow"></div>
 
-    <!-- 7 VỆT ÁNH SÁNG DÀI CHIẾU TỪ GÓC TRÊN BÊN TRÁI -->
+    <!-- 7 TIA SÁNG CHỚP NHÁY TỪ GÓC TRÊN BÊN TRÁI -->
     <div class="light-beams-container">
         <div class="beam"></div>
         <div class="beam"></div>
@@ -213,16 +281,23 @@
         <div class="beam"></div>
     </div>
 
+    <!-- CÁC HẠT SÁNG NỀN -->
+    <div class="particles" id="particles-container"></div>
+
     <div class="game-container">
         
         <!-- SẢNH CHỜ (LOBBY) -->
         <div id="lobby-screen">
+            <div class="prism-decoration">
+                <div class="prism-shape"></div>
+            </div>
             <h1>Bài 7 Lăng Kính</h1>
             <button class="start-btn" onclick="startGame()">Bắt đầu chơi</button>
         </div>
 
         <!-- MÀN HÌNH CÂU HỎI -->
         <div id="quiz-screen">
+            <button class="home-btn" onclick="goHome()">🏠 Sảnh</button>
             <div id="progress">Câu hỏi 1 / 10</div>
             <div id="question-text">Đang tải câu hỏi...</div>
             <div class="options-container" id="options-container"></div>
@@ -239,6 +314,19 @@
     </div>
 
     <script>
+        // Tạo các hạt sáng bay ngẫu nhiên nền
+        const particlesContainer = document.getElementById("particles-container");
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement("div");
+            p.classList.add("particle");
+            p.style.left = Math.random() * 100 + "%";
+            p.style.width = (Math.random() * 3 + 2) + "px";
+            p.style.height = p.style.width;
+            p.style.animationDuration = (Math.random() * 4 + 4) + "s";
+            p.style.animationDelay = (Math.random() * 5) + "s";
+            particlesContainer.appendChild(p);
+        }
+
         const questions = [
             {
                 question: "Câu 1. Tiết diện thẳng của lăng kính có hình dạng là:",
@@ -309,6 +397,14 @@
             lobbyScreen.style.display = "none";
             quizScreen.style.display = "block";
             loadQuestion();
+        }
+
+        function goHome() {
+            quizScreen.style.display = "none";
+            resultScreen.style.display = "none";
+            lobbyScreen.style.display = "block";
+            currentQuestionIndex = 0;
+            score = 0;
         }
 
         function loadQuestion() {
